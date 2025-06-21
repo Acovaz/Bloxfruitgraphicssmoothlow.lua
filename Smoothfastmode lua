@@ -1,1 +1,68 @@
-https://raw.githubusercontent.com/Acovaz/Bloxstrap-mobile/main/Bloxstrap.lua
+--📱 Blox Fruits ULTIMATE FPS BOOST | Plain Skills, No Particles, Hair, or Shirts
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Acovaz/Bloxstrap-mobile/main/Bloxstrap.lua"))()
+
+repeat task.wait() until game:IsLoaded()
+
+--💨 Remove laggy visual elements function
+local function destroyVisuals(obj)
+    if obj:IsA("ParticleEmitter") or obj:IsA("Trail") or obj:IsA("Beam") or obj:IsA("Fire") or obj:IsA("Smoke") then
+        obj:Destroy()
+    elseif obj:IsA("Decal") or obj:IsA("Texture") then
+        obj:Destroy()
+    elseif obj:IsA("Shirt") or obj:IsA("ShirtGraphic") or obj:IsA("Pants") then
+        obj:Destroy()
+    elseif obj:IsA("Accessory") or obj:IsA("Hat") or obj:IsA("HairAccessory") then
+        obj:Destroy()
+    elseif obj:IsA("SurfaceGui") or obj:IsA("BillboardGui") or obj:IsA("TextLabel") then
+        obj.Enabled = false
+    elseif obj:IsA("PointLight") or obj:IsA("SpotLight") or obj:IsA("SurfaceLight") then
+        obj:Destroy()
+    end
+end
+
+--🧹 Clean all existing visuals
+for _, v in ipairs(game:GetDescendants()) do
+    pcall(destroyVisuals, v)
+end
+
+--🛡️ Block new ones from appearing
+game.DescendantAdded:Connect(function(obj)
+    pcall(destroyVisuals, obj)
+end)
+
+--⚙️ Bloxstrap-style FastFlags graphics quality
+local function optimizeGraphics()
+    local lighting = game:GetService("Lighting")
+    lighting.GlobalShadows = false
+    lighting.FogEnd = 1e10
+    lighting.Brightness = 1
+    lighting.ClockTime = 14
+    lighting.OutdoorAmbient = Color3.fromRGB(120, 120, 120)
+
+    -- Remove special effects in lighting
+    for _, v in pairs(lighting:GetChildren()) do
+        if v:IsA("BlurEffect") or v:IsA("SunRaysEffect") or v:IsA("BloomEffect") or v:IsA("ColorCorrectionEffect") then
+            v.Enabled = false
+        elseif v:IsA("Sky") then
+            v:Destroy()
+        end
+    end
+
+    -- Water & terrain settings
+    local terrain = workspace.Terrain
+    terrain.WaterWaveSize = 0
+    terrain.WaterWaveSpeed = 0
+    terrain.WaterReflectance = 0
+    terrain.WaterTransparency = 1
+
+    -- Rendering performance flags
+    pcall(function()
+        settings().Rendering.EnableOutline = false
+        settings().Rendering.EagerBulkExecution = true
+    end)
+end
+
+--🟢 Apply optimized graphics settings
+optimizeGraphics()
+
+print("✅ ULTIMATE FPS BOOST Loaded: Bloxstrap + Plain Skills + No Particles/Hair/Shirt")
